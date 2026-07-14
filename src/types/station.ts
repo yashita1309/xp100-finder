@@ -21,6 +21,9 @@ export interface NearbyStationResponse {
   roCode: string;
   stationName: string;
   city: string;
+  stateOffice: string;
+  divisionalOffice: string;
+  salesArea: string;
   latitude: number;
   longitude: number;
   distance: number;

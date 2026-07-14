@@ -25,6 +25,16 @@ export class StationController {
         search: searchQuery,
       });
 
+      const isEmpty = Array.isArray(result) ? result.length === 0 : result.stations.length === 0;
+
+      if (isEmpty) {
+        res.status(404).json({
+          error: 'Not Found',
+          message: 'No stations found.',
+        });
+        return;
+      }
+
       res.json(result);
     } catch (error) {
       next(error);
@@ -39,32 +49,55 @@ export class StationController {
     try {
       const { lat, lng, radius, limit } = req.query;
 
-      if (!lat || !lng) {
+      if (lat === undefined || lat === '') {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Both latitude (lat) and longitude (lng) query parameters are required.',
+          message: 'Missing latitude',
+        });
+        return;
+      }
+
+      if (lng === undefined || lng === '') {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Missing longitude',
         });
         return;
       }
 
       const latitude = parseFloat(lat as string);
-      const longitude = parseFloat(lng as string);
-
-      if (isNaN(latitude) || isNaN(longitude)) {
+      if (isNaN(latitude) || latitude < -90 || latitude > 90) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Latitude and longitude must be valid floating point numbers.',
+          message: 'Invalid latitude',
         });
         return;
       }
 
-      const searchRadius = radius ? parseFloat(radius as string) : 50;
-      const maxResults = limit ? parseInt(limit as string, 10) : 20;
-
-      if (isNaN(searchRadius) || isNaN(maxResults)) {
+      const longitude = parseFloat(lng as string);
+      if (isNaN(longitude) || longitude < -180 || longitude > 180) {
         res.status(400).json({
           error: 'Bad Request',
-          message: 'Radius and limit parameters must be valid numbers.',
+          message: 'Invalid longitude',
+        });
+        return;
+      }
+
+      const searchRadius = radius ? parseFloat(radius as string) : 100;
+      const maxResults = limit ? parseInt(limit as string, 10) : 10;
+
+      if (isNaN(searchRadius) || searchRadius < 0) {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Radius parameter must be a valid positive number.',
+        });
+        return;
+      }
+
+      if (isNaN(maxResults) || maxResults <= 0) {
+        res.status(400).json({
+          error: 'Bad Request',
+          message: 'Limit parameter must be a valid positive integer.',
         });
         return;
       }
@@ -75,6 +108,14 @@ export class StationController {
         searchRadius,
         maxResults,
       );
+
+      if (results.length === 0) {
+        res.status(404).json({
+          error: 'Not Found',
+          message: 'No nearby stations found within the requested radius.',
+        });
+        return;
+      }
 
       res.json(results);
     } catch (error) {

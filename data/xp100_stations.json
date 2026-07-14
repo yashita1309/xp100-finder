@@ -203,7 +203,7 @@
     "stateOffice": "DSO",
     "divisionalOffice": "Gurgaon DO",
     "salesArea": "Mewat RSA",
-    "city": "Delhi Mumbai   Expressway",
+    "city": "Delhi Mumbai Expressway",
     "latitude": 27.7908,
     "longitude": 77.0102,
     "googleMapsUrl": "https://www.google.com/maps/dir/?api=1&destination=27.7908,77.0102"
@@ -214,7 +214,7 @@
     "stateOffice": "DSO",
     "divisionalOffice": "Gurgaon DO",
     "salesArea": "Mewat RSA",
-    "city": "Delhi Mumbai   Expressway",
+    "city": "Delhi Mumbai Expressway",
     "latitude": 28.0354443,
     "longitude": 77.1193473,
     "googleMapsUrl": "https://www.google.com/maps/dir/?api=1&destination=28.0354443,77.1193473"
@@ -1226,14 +1226,14 @@
     "stateOffice": "TNSO",
     "divisionalOffice": "Chennai DO",
     "salesArea": "Chengalpet RSA",
-    "city": "KELAMBAKKAM,   KANCHIPURAM",
+    "city": "KELAMBAKKAM, KANCHIPURAM",
     "latitude": 12.783521,
     "longitude": 80.219124,
     "googleMapsUrl": "https://www.google.com/maps/dir/?api=1&destination=12.783521,80.219124"
   },
   {
     "roCode": "174453",
-    "stationName": "**SHRI PADMAVATHI AGENCIES",
+    "stationName": "SHRI PADMAVATHI AGENCIES",
     "stateOffice": "TNSO",
     "divisionalOffice": "Chennai DO",
     "salesArea": "Chennai East RSA",
@@ -1244,7 +1244,7 @@
   },
   {
     "roCode": "133649",
-    "stationName": "**WOODLANDS ENTERPRISES",
+    "stationName": "WOODLANDS ENTERPRISES",
     "stateOffice": "TNSO",
     "divisionalOffice": "Chennai DO",
     "salesArea": "Chennai(North) RSA",
@@ -1255,7 +1255,7 @@
   },
   {
     "roCode": "133732",
-    "stationName": "**P R M FUELS LOCK NO.1108",
+    "stationName": "P R M FUELS LOCK NO.1108",
     "stateOffice": "TNSO",
     "divisionalOffice": "Chennai DO",
     "salesArea": "Kanchipuram RSA",
@@ -1277,7 +1277,7 @@
   },
   {
     "roCode": "133635",
-    "stationName": "**SANTHI SERVICE STATION",
+    "stationName": "SANTHI SERVICE STATION",
     "stateOffice": "TNSO",
     "divisionalOffice": "Chennai DO",
     "salesArea": "Tambaram RSA",
@@ -1299,7 +1299,7 @@
   },
   {
     "roCode": "133670",
-    "stationName": "**SRI IYYAPPA AUTO CENTRE",
+    "stationName": "SRI IYYAPPA AUTO CENTRE",
     "stateOffice": "TNSO",
     "divisionalOffice": "Chennai DO",
     "salesArea": "Chennai(North) RSA",
@@ -1420,7 +1420,7 @@
   },
   {
     "roCode": "252242",
-    "stationName": "**CHANDRA AGENCY LK-1190/122",
+    "stationName": "CHANDRA AGENCY LK-1190/122",
     "stateOffice": "TNSO",
     "divisionalOffice": "Trichy DO",
     "salesArea": "Pondicherry RSA",

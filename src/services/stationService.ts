@@ -20,18 +20,17 @@ export class StationService {
    * Returns an empty array if the file does not exist.
    */
   public static getAllRawStations(): Station[] {
+    if (!fs.existsSync(DATA_FILE_PATH)) {
+      console.warn(
+        `[StationService] Data file not found at ${DATA_FILE_PATH}. Returning empty list.`,
+      );
+      return [];
+    }
     try {
-      if (!fs.existsSync(DATA_FILE_PATH)) {
-        console.warn(
-          `[StationService] Data file not found at ${DATA_FILE_PATH}. Returning empty list.`,
-        );
-        return [];
-      }
       const rawData = fs.readFileSync(DATA_FILE_PATH, 'utf-8');
       return JSON.parse(rawData) as Station[];
     } catch (error) {
-      console.error(`[StationService] Error reading raw stations: ${(error as Error).message}`);
-      return [];
+      throw new Error(`JSON parsing failure: ${(error as Error).message}`);
     }
   }
 
@@ -104,8 +103,8 @@ export class StationService {
   public static getNearbyStations(
     lat: number,
     lng: number,
-    radius = 50,
-    limit = 20,
+    radius = 100,
+    limit = 10,
   ): NearbyStationResponse[] {
     const stations = this.getAllRawStations();
 
@@ -119,6 +118,9 @@ export class StationService {
           roCode: station.roCode,
           stationName: station.stationName,
           city: station.city,
+          stateOffice: station.stateOffice,
+          divisionalOffice: station.divisionalOffice,
+          salesArea: station.salesArea,
           latitude: station.latitude,
           longitude: station.longitude,
           distance,

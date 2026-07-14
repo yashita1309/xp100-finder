@@ -14,6 +14,18 @@ const DEFAULT_OUTPUT_PATH = path.resolve(
 );
 
 /**
+ * Trims whitespace, removes leading symbols like "**", replaces multiple spaces with a single space,
+ * and preserves original casing.
+ */
+function cleanField(val: string): string {
+  let cleaned = val.trim();
+  if (cleaned.startsWith('**')) {
+    cleaned = cleaned.substring(2).trim();
+  }
+  return cleaned.replace(/\s+/g, ' ');
+}
+
+/**
  * Scrapes the XP100 petrol pump stations from the official IOCL website.
  * Saves the output to a local JSON file and returns performance statistics.
  */
@@ -61,14 +73,12 @@ export async function scrapeXP100Stations(outputPath = DEFAULT_OUTPUT_PATH): Pro
         return;
       }
 
-      const stateOffice = $(cells[1]).text().trim();
-      const divisionalOffice = $(cells[2]).text().trim();
-      const salesArea = $(cells[3]).text().trim();
-      const roCode = $(cells[4]).text().trim();
-
-      // Clean up multiple inner spaces in station name (e.g. "Swagat RO   Jasidih" -> "Swagat RO Jasidih")
-      const stationName = $(cells[5]).text().trim().replace(/\s+/g, ' ');
-      const city = $(cells[6]).text().trim();
+      const stateOffice = cleanField($(cells[1]).text());
+      const divisionalOffice = cleanField($(cells[2]).text());
+      const salesArea = cleanField($(cells[3]).text());
+      const roCode = cleanField($(cells[4]).text());
+      const stationName = cleanField($(cells[5]).text());
+      const city = cleanField($(cells[6]).text());
       const latStr = $(cells[7]).text().trim();
       const lngStr = $(cells[8]).text().trim();
 
