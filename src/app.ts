@@ -12,6 +12,7 @@ import ioclXp95Routes from './routes/ioclXp95Routes';
 import { errorHandler } from './middleware/errorHandler';
 
 import path from 'path';
+import fs from 'fs';
 
 const app: Express = express();
 
@@ -43,13 +44,35 @@ app.use(['/stations', '/admin', '/hpcl', '/shell', '/bpcl', '/iocl'], (_req: Req
   });
 });
 
-// Serve frontend static assets from dist/public folder
-app.use(express.static(path.resolve('dist/public')));
+const staticPath = path.resolve('dist/public');
+const indexPath = path.join(staticPath, 'index.html');
 
-// Fallback to index.html for SPA client-side routing
-app.get('*', (_req: Request, res: Response) => {
-  res.sendFile(path.resolve('dist/public/index.html'));
-});
+if (fs.existsSync(indexPath)) {
+  console.log('[Server] Static frontend found at dist/public. Mounting frontend router.');
+  // Serve frontend static assets from dist/public folder
+  app.use(express.static(staticPath));
+  // Fallback to index.html for SPA client-side routing
+  app.get('*', (_req: Request, res: Response) => {
+    res.sendFile(indexPath);
+  });
+} else {
+  console.log('[Server] Static frontend not found. Operating in API-only mode.');
+  // Friendly API welcome message at root
+  app.get('/', (_req: Request, res: Response) => {
+    res.json({
+      status: 'ok',
+      message: 'Premium Petrol Finder API Server is running.',
+      version: '1.0.0',
+    });
+  });
+  // Default API-style 404 for other pages
+  app.get('*', (_req: Request, res: Response) => {
+    res.status(404).json({
+      error: 'Not Found',
+      message: 'API endpoint not found.',
+    });
+  });
+}
 
 // Global central error handler middleware
 app.use(errorHandler);
