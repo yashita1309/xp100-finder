@@ -67,9 +67,10 @@ export class ShellStationService {
       const searchLower = params.search.trim().toLowerCase();
       stations = stations.filter(
         (s) =>
-          s.stationName.toLowerCase().includes(searchLower) ||
-          s.city.toLowerCase().includes(searchLower) ||
+          (s.stationName || '').toLowerCase().includes(searchLower) ||
+          (s.city || '').toLowerCase().includes(searchLower) ||
           (s.address || '').toLowerCase().includes(searchLower) ||
+          (s.state || '').toLowerCase().includes(searchLower) ||
           (s.postcode || '').toLowerCase().includes(searchLower) ||
           (s.stationId || '').toLowerCase().includes(searchLower),
       );

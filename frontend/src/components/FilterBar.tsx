@@ -12,6 +12,8 @@ interface FilterBarProps {
   setSortBy: (s: 'distance' | 'price' | 'name') => void;
   sortOrder: 'asc' | 'desc';
   setSortOrder: (o: 'asc' | 'desc') => void;
+  limitTo10: boolean;
+  setLimitTo10: (l: boolean) => void;
 }
 
 export const FilterBar: React.FC<FilterBarProps> = ({
@@ -25,6 +27,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   setSortBy,
   sortOrder,
   setSortOrder,
+  limitTo10,
+  setLimitTo10,
 }) => {
   return (
     <div className="sticky top-20 z-40 w-full glassmorphism p-5 rounded-3xl shadow-xl shadow-slate-100 dark:shadow-none border border-slate-200/60 dark:border-slate-800/80 flex flex-col gap-4">
@@ -89,23 +93,41 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           ))}
         </div>
 
-        {/* Radius selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Search Radius</span>
-          <div className="flex bg-slate-100/80 dark:bg-slate-800/50 p-1.5 rounded-xl border border-slate-200/50 dark:border-slate-800/80">
-            {[5, 10, 20, 50, 100].map((r) => (
-              <button
-                key={r}
-                onClick={() => setRadius(r)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  radius === r
-                    ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm font-extrabold'
-                    : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
-                }`}
-              >
-                {r} km
-              </button>
-            ))}
+        {/* Radius & Limit toggle group */}
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Limit Toggle */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Max Results</span>
+            <button
+              onClick={() => setLimitTo10(!limitTo10)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer active:scale-95 ${
+                limitTo10
+                  ? 'bg-rose-500 text-white border-transparent shadow-md shadow-rose-500/20'
+                  : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/80 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              {limitTo10 ? 'Top 10' : 'Show All'}
+            </button>
+          </div>
+
+          {/* Radius selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Search Radius</span>
+            <div className="flex bg-slate-100/80 dark:bg-slate-800/50 p-1.5 rounded-xl border border-slate-200/50 dark:border-slate-800/80">
+              {[5, 10, 20, 50, 100].map((r) => (
+                <button
+                  key={r}
+                  onClick={() => setRadius(r)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    radius === r
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm font-extrabold'
+                      : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+                  }`}
+                >
+                  {r} km
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

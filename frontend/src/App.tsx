@@ -29,6 +29,7 @@ export default function App() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [showComparison, setShowComparison] = useState(false);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [limitTo10, setLimitTo10] = useState(true);
 
   // Data fetching and UI status state
   const [stations, setStations] = useState<UnifiedStation[]>([]);
@@ -283,20 +284,20 @@ export default function App() {
 
   // Split unified list back into separate components for layout groups
   const ioclStations = useMemo(
-    () => filteredAndSortedStations.filter((s) => s.brand === 'IOCL'),
-    [filteredAndSortedStations]
+    () => filteredAndSortedStations.filter((s) => s.brand === 'IOCL').slice(0, limitTo10 ? 10 : undefined),
+    [filteredAndSortedStations, limitTo10]
   );
   const hpclStations = useMemo(
-    () => filteredAndSortedStations.filter((s) => s.brand === 'HPCL'),
-    [filteredAndSortedStations]
+    () => filteredAndSortedStations.filter((s) => s.brand === 'HPCL').slice(0, limitTo10 ? 10 : undefined),
+    [filteredAndSortedStations, limitTo10]
   );
   const bpclStations = useMemo(
-    () => filteredAndSortedStations.filter((s) => s.brand === 'BPCL'),
-    [filteredAndSortedStations]
+    () => filteredAndSortedStations.filter((s) => s.brand === 'BPCL').slice(0, limitTo10 ? 10 : undefined),
+    [filteredAndSortedStations, limitTo10]
   );
   const shellStations = useMemo(
-    () => filteredAndSortedStations.filter((s) => s.brand === 'Shell'),
-    [filteredAndSortedStations]
+    () => filteredAndSortedStations.filter((s) => s.brand === 'Shell').slice(0, limitTo10 ? 10 : undefined),
+    [filteredAndSortedStations, limitTo10]
   );
 
   const handleSelectCity = (c: CityCoords) => {
@@ -358,6 +359,8 @@ export default function App() {
               setSortBy={setSortBy}
               sortOrder={sortOrder}
               setSortOrder={setSortOrder}
+              limitTo10={limitTo10}
+              setLimitTo10={setLimitTo10}
             />
 
             {/* Matrix comparison button */}

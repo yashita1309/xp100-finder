@@ -76,8 +76,10 @@ export class HPCLStationService {
       const searchLower = params.search.trim().toLowerCase();
       stations = stations.filter(
         (s) =>
-          s.stationName.toLowerCase().includes(searchLower) ||
-          s.city.toLowerCase().includes(searchLower) ||
+          (s.stationName || '').toLowerCase().includes(searchLower) ||
+          (s.city || '').toLowerCase().includes(searchLower) ||
+          (s.address || '').toLowerCase().includes(searchLower) ||
+          (s.state || '').toLowerCase().includes(searchLower) ||
           (s.salesArea || '').toLowerCase().includes(searchLower) ||
           (s.divisionalOffice || '').toLowerCase().includes(searchLower) ||
           (s.stateOffice || '').toLowerCase().includes(searchLower) ||

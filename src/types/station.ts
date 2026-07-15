@@ -1,9 +1,9 @@
 export interface Station {
   roCode: string;
   stationName: string;
-  stateOffice: string;
-  divisionalOffice: string;
-  salesArea: string;
+  stateOffice: string | null;
+  divisionalOffice: string | null;
+  salesArea: string | null;
   city: string;
   latitude: number;
   longitude: number;
@@ -12,6 +12,11 @@ export interface Station {
   dieselPrice?: number | null;
   xp95Price?: number | null;
   xp100Price?: number | null;
+  address?: string | null;
+  state?: string | null;
+  phone?: string | null;
+  openingHours?: string | null;
+  stationUrl?: string | null;
 }
 
 export interface ScraperStats {
@@ -25,9 +30,9 @@ export interface NearbyStationResponse {
   roCode: string;
   stationName: string;
   city: string;
-  stateOffice: string;
-  divisionalOffice: string;
-  salesArea: string;
+  stateOffice: string | null;
+  divisionalOffice: string | null;
+  salesArea: string | null;
   latitude: number;
   longitude: number;
   distance: number;

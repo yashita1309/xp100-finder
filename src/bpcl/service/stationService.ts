@@ -66,8 +66,9 @@ export class BPCLStationService {
       const searchLower = params.search.trim().toLowerCase();
       stations = stations.filter(
         (s) =>
-          s.stationName.toLowerCase().includes(searchLower) ||
-          s.city.toLowerCase().includes(searchLower) ||
+          (s.stationName || '').toLowerCase().includes(searchLower) ||
+          (s.city || '').toLowerCase().includes(searchLower) ||
+          (s.address || '').toLowerCase().includes(searchLower) ||
           (s.state || '').toLowerCase().includes(searchLower) ||
           (s.roId || '').toLowerCase().includes(searchLower),
       );
