@@ -14,6 +14,7 @@ import { useGeolocation } from './hooks/useGeolocation';
 import { useTheme } from './hooks/useTheme';
 import { PetrolFinderAPI } from './services/api';
 import type { UnifiedStation } from './types';
+import { ALL_INDIAN_CITIES } from './utils/cities';
 import type { CityCoords } from './utils/cities';
 import { Heart, Table } from 'lucide-react';
 
@@ -245,6 +246,55 @@ export default function App() {
     }
   }, [latitude, longitude]);
 
+  // Create a map of unique cities in the database to their first station coordinates (for fallback dynamic geocoding)
+  const uniqueCitiesInDb = useMemo(() => {
+    const citiesMap = new Map<string, { lat: number; lng: number }>();
+    stations.forEach((s) => {
+      if (s.city && s.latitude && s.longitude) {
+        const cityName = s.city.trim().toUpperCase();
+        if (!citiesMap.has(cityName)) {
+          citiesMap.set(cityName, { lat: s.latitude, lng: s.longitude });
+        }
+      }
+    });
+    return citiesMap;
+  }, [stations]);
+
+  // Automatically update location coordinates when the user inputs a city name in search (Instant & 100% Offline)
+  useEffect(() => {
+    if (!search.trim()) return;
+    const query = search.trim().toUpperCase();
+
+    // 1. Check static comprehensive geocoding database first (covering major cities like Jabalpur, Indore, Noida, etc.)
+    const staticMatch = ALL_INDIAN_CITIES.find(
+      (c) => c.name.toUpperCase() === query || c.name.toUpperCase().split(' ').includes(query)
+    );
+
+    if (staticMatch) {
+      if (latitude !== staticMatch.lat || longitude !== staticMatch.lng) {
+        setCustomLocation(staticMatch.lat, staticMatch.lng, staticMatch.name);
+      }
+      return;
+    }
+
+    // 2. Fallback to dynamic database match (scanning current station listings city names)
+    const matchedCityKey = Array.from(uniqueCitiesInDb.keys()).find(
+      (c) => c === query || c.split(' ').includes(query)
+    );
+
+    if (matchedCityKey) {
+      const coords = uniqueCitiesInDb.get(matchedCityKey);
+      if (coords && (latitude !== coords.lat || longitude !== coords.lng)) {
+        const formattedCityName = matchedCityKey
+          .toLowerCase()
+          .split(' ')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+        setCustomLocation(coords.lat, coords.lng, formattedCityName);
+      }
+    }
+  }, [search, uniqueCitiesInDb, latitude, longitude, setCustomLocation]);
+
   // Load data immediately on coordinates update
   useEffect(() => {
     loadData();
@@ -259,16 +309,16 @@ export default function App() {
       const q = search.toLowerCase();
       results = results.filter(
         (s) =>
-          s.stationName.toLowerCase().includes(q) ||
-          s.city.toLowerCase().includes(q) ||
-          s.state.toLowerCase().includes(q) ||
-          s.address.toLowerCase().includes(q) ||
-          (s.stationId && s.stationId.toLowerCase().includes(q))
+          (s.stationName?.toLowerCase() || '').includes(q) ||
+          (s.city?.toLowerCase() || '').includes(q) ||
+          (s.state?.toLowerCase() || '').includes(q) ||
+          (s.address?.toLowerCase() || '').includes(q) ||
+          (s.stationId?.toLowerCase() || '').includes(q)
       );
     }
 
-    // 2. Radius filter (in-memory)
-    if (latitude !== null && longitude !== null && radius !== undefined) {
+    // 2. Radius filter (in-memory) - Only apply if there is no active search query
+    if (!search.trim() && latitude !== null && longitude !== null && radius !== undefined) {
       results = results.filter((s) => s.distance === undefined || s.distance <= radius);
     }
 
